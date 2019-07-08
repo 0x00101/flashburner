@@ -1,10 +1,11 @@
 import os, sys
 
 if len(sys.argv) != 3:
-	sys.exit('Usage: sudo %s iso-file burn-device' % sys.argv[0])
+	sys.exit('Usage: sudo python flashburner.py <iso> <device>')
 
 isofile = sys.argv[1]
 device = sys.argv[2]
+tempiso = "fburn-temp.iso"
 
 if not os.path.exists(isofile):
 	sys.exit('ERROR: ISO file %s was not found!' % isofile)
@@ -12,38 +13,54 @@ if not os.path.exists(isofile):
 if not os.path.exists(device):
 	sys.exit('ERROR: Device on %s was not found!' % device)
 
-print 'Starting ISO Flashburner...'
-print ''
+print 'Installing additional packages...'
+print
 
-f = os.popen('sudo fdisk -l %s' % device)
-print f.read()
+os.system('sudo apt-get install pv')
+os.system('clear')
 
-thisdriveornot = raw_input("This is really your burning drive? [y/n]: ")
+print
+print 'Flashburner for GNU/Linux (version 1.0)'
+print 'Developed and tested by 0x00101'
+print
 
-if thisdriveornot != 'y':
-	sys.exit('Okay. Terminating flashburner..')
+list = os.popen('sudo fdisk -l %s' % device)
+print list.read()
+print
 
-hybridornot = raw_input("Convert ISO file to hybrid? (Try if simple burn don't working) [y/n]: ")
+correctdevice = raw_input("This is correct flash drive? [y/n]: ")
+if correctdevice != 'y':
+	sys.exit('Yep? Okay..')
 
-if hybridornot != 'n':
-	copyornot = raw_input("Copy ISO before converting? (recommended but it's maybe very long) [y/n]: ")
-	if copyornot != 'n':
-		# also code..
+print('Unmounting device %s..' % device)
+os.system('sudo umount -f %s' % device)
 
-if hybridornot != 'y':
-	print('Unmounting device %s..' % device)
-	os.system('sudo umount -f %s' % device)
+copyiso = raw_input("Copy ISO before burning? (recommended but it's maybe very long) [y/n]: ")
+if copyiso != 'y':
+	print('Copying %s to %s' % (isofile, tempiso))
+	os.system('pv %s > %s' % (isofile, tempiso))
 
-	print ''
-	wannacnt = raw_input("You really wanna continue and burn your flash drive? (WARNING: It's full reformating! Backup your data immediately!) [y/n]: ")
+hybridd = raw_input("Convert ISO file to hybrid? (not-recommended) [y/n]: ")
+if hybridd != 'n':
+	print('Trying to hybrid %s..' % isofile)
+	os.system("isohybrid %s" % isofile)
+print
 
-	if wannacnt != 'y':
-		print('Mounting back %s on /mnt/flash/' % device)
-		os.system("sudo mount -o rw,force %s /mnt/flash" % device)
-		sys.exit('Terminating...')
+continueburn = raw_input("You really wanna continue and burn your flash drive? (WARNING: It's full reformating! ALL DATA WILL BE LOST!) [y/n]: ")
+if continueburn != 'y':
+	print('Mounting back %s on /mnt/flash/' % device)
+	os.system('sudo mkdir /mnt/flash')
+	os.system("sudo mount -o rw,force %s /mnt/flash" % device)
+	sys.exit('Terminating...')
 
-	print('Burning on %s..' % device)
-	os.system("sudo dd if=%s of=%s status=progress" % (isofile, device))
+print('Burning on %s..' % device)
+os.system("sudo dd if=%s of=%s status=progress" % (isofile, device))
+
+msboot = raw_input("Would you like install MS MBR boot record? (ms-sys package needed) [y/n]: ")
+
+if msboot != 'n':
+	print('Trying to setup Microsoft MBR bootsector in %s' % device)
+	os.system('ms-sys -w %s' % device)
 
 print 'Done!'
 sys.exit()
