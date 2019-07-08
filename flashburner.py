@@ -35,8 +35,8 @@ if hybridornot != 'y':
 	os.system('sudo umount -f %s' % device)
 
 	print ''
-	wannacnt = raw_input("You really wanna continue and burn your flash drive? (WARNING: It's full reformating! Backup your data immediately!) [y/n]: ")	
-	
+	wannacnt = raw_input("You really wanna continue and burn your flash drive? (WARNING: It's full reformating! Backup your data immediately!) [y/n]: ")
+
 	if wannacnt != 'y':
 		print('Mounting back %s on /mnt/flash/' % device)
 		os.system("sudo mount -o rw,force %s /mnt/flash" % device)
@@ -46,19 +46,14 @@ if hybridornot != 'y':
 	os.system("sudo dd if=%s of=%s status=progress" % (isofile, device))
 
 print 'Done!'
-
 sys.exit()
 
-os.system("sudo dd if=")
-
-
-os.system('hdiutil convert -format UDRW -o bootable.img %s' % sys.argv[1])
-os.system('mv bootable.img.dmg bootable.img')
-
-os.system('sudo diskutil unmount /dev/%s' % diskid)
-print 'It is not stuck, just wait until it finishes.'
-print 'Creating bootable usb...'
-os.system('sudo dd bs=1m if=bootable.img of=/dev/r%s' % diskid)
-os.system('rm -f bootable.img')
-
-print 'Done!'
+#os.system("sudo dd if=")
+#os.system('hdiutil convert -format UDRW -o bootable.img %s' % sys.argv[1])
+#os.system('mv bootable.img.dmg bootable.img')
+#os.system('sudo diskutil unmount /dev/%s' % diskid)
+#print 'It is not stuck, just wait until it finishes.'
+#print 'Creating bootable usb...'
+#os.system('sudo dd bs=1m if=bootable.img of=/dev/r%s' % diskid)
+#os.system('rm -f bootable.img')
+#print 'Done!'

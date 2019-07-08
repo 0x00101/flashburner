@@ -1,9 +1,7 @@
-ISO TO USB
-==========
+# Flashburner (ISO TO USB)
 
-Simple python script to create a bootable usb using an .iso file from your computer.
-It works on OS X but probably it won't work on linux.
+Simple python script to create a bootable usb using an .iso file from your computer. It works on Linux (tested on Xubuntu 18.04) but don't work on OS X 
 
-Usage: sudo python iso2usb.py ~/path-to-iso.iso
+Usage: sudo python flashburner.py file.iso /dev/object
 
 Use at your own risk.
