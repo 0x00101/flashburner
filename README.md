@@ -7,3 +7,5 @@ Also you need MS-SYS package if you wanna make NT 6.0 bootsector
 Usage: sudo python flashburner.py file.iso /dev/object
 
 Use at your own risk.
+
+Note: now not working :/

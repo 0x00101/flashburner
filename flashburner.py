@@ -1,3 +1,5 @@
+# Not working
+
 import os, sys
 
 if len(sys.argv) != 3:
@@ -23,6 +25,9 @@ print
 print 'Flashburner for GNU/Linux (version 1.0)'
 print 'Developed and tested by 0x00101'
 print
+
+
+# now is not working :/
 
 list = os.popen('sudo fdisk -l %s' % device)
 print list.read()
@@ -50,11 +55,11 @@ continueburn = raw_input("You really wanna continue and burn your flash drive? (
 if continueburn != 'y':
 	print('Mounting back %s on /mnt/flash/' % device)
 	os.system('sudo mkdir /mnt/flash')
-	os.system("sudo mount -o rw,force %s /mnt/flash" % device)
+	os.system('sudo mount -o rw,force %s /mnt/flash' % device)
 	sys.exit('Terminating...')
 
 print('Burning on %s..' % device)
-os.system("sudo dd if=%s of=%s status=progress" % (isofile, device))
+os.system('sudo dd if=%s of=%s status=progress' % (isofile, device) )
 
 msboot = raw_input("Would you like install MS MBR boot record? (ms-sys package needed) [y/n]: ")
 
